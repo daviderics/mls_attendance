@@ -2,11 +2,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def make_hist_scatter(df, feature, bins=10, norm_attendance=True):
+def make_hist_scatter(df, feature, bins=10, figsize=(7,7)):
     """
-    This function makes two plots:
-    Left: Histogram of the specified feature.
-    Right: Scatter plot of attendance vs. the specified feature.
+    This function makes three plots:
+    Top: Histogram of the specified feature.
+    Bottom Left: Scatter plot of attendance vs. the specified feature.
+    Bottom Right: Scatter plot of attendance/capacity vs. the specified feature.
     
     This function should be used for continuous numerical features.
     For discrete numerical features or categorical features, use make_bar_scatter (below).
@@ -15,40 +16,47 @@ def make_hist_scatter(df, feature, bins=10, norm_attendance=True):
     df: Pandas DataFrame that contains the data.
     feature: The name of the column we want to look at.
     bins: Number of bins to use for histogram.
-    norm_attendance: Whether or not to use attendance that has been divided by stadium capacity.
-    True: Use att_div_capacity
-    False: Use attendance
     """
-    fig, ax = plt.subplots(ncols=2, figsize=(15,7))
+    fig = plt.figure(figsize=figsize)
+    spec = fig.add_gridspec(2,2)
     
     # Histogram
+    ax0 = fig.add_subplot(spec[0,:])
     df[feature].plot.hist(bins=bins,
-                          ax=ax[0],
+                          ax=ax0,
                           xlabel=feature,
                           title=f"Histogram of {feature}")
     
-    # Scatter plot
-    if norm_attendance:
-        att_name = 'att_div_capacity'
-        att_label = 'attendance / capacity'
-    else:
-        att_name = 'attendance'
-        att_label = 'attendance'
+    # Scatter plot of attendance
+    ax1 = fig.add_subplot(spec[1,0])
     df.plot.scatter(x=feature,
-                    y=att_name,
-                    ax=ax[1],
+                    y='attendance',
+                    ax=ax1,
                     xlabel=feature,
-                    ylabel=att_label,
-                    title=f"{att_label} vs. {feature}",
-                    alpha=0.5)
+                    ylabel='attendance',
+                    title=f"attendance vs. {feature}",
+                    alpha=0.5,
+                    s=7)
+    
+    # Scatter plot of attendance/capacity
+    ax2 = fig.add_subplot(spec[1,1])
+    df.plot.scatter(x=feature,
+                    y='att_div_capacity',
+                    ax=ax2,
+                    xlabel=feature,
+                    ylabel='attendance/capacity',
+                    title=f"attendance/capacity vs. {feature}",
+                    alpha=0.5,
+                    s=7)
     
     fig.tight_layout()
     
-def make_bar_scatter(df, feature, norm_attendance=True):
+def make_bar_scatter(df, feature, figsize=(7,7)):
     """
-    This function makes two plots:
-    Left: Bar chart of the specified feature.
-    Right: Scatter plot of attendance vs. the specified feature.
+    This function makes three plots:
+    Top: Bar chart of the specified feature.
+    Left: Scatter plot of attendance vs. the specified feature.
+    Right: Scatter plot of attendance/capacity vs. the specified feature.
     
     This function should be used for discrete numerical features and categorical features.
     For continuous numerical features, use make_hist_scatter (above).
@@ -56,37 +64,96 @@ def make_bar_scatter(df, feature, norm_attendance=True):
     Inputs:
     df: Pandas DataFrame that contains the data.
     feature: The name of the column we want to look at.
-    norm_attendance: Whether or not to use attendance that has been divided by stadium capacity.
-    True: Use att_div_capacity
-    False: Use attendance
     """
-    fig, ax = plt.subplots(ncols=2, figsize=(15,7))
+    fig = plt.figure(figsize=figsize)
+    spec = fig.add_gridspec(2,2)
     
     # Bar chart
-    df.groupby(by=feature).agg({feature:'count'}).plot.bar(ax=ax[0])
+    ax0 = fig.add_subplot(spec[0,:])
+    df.groupby(by=feature).agg({feature:'count'}).plot.bar(ax=ax0,
+                                                           title=f"Distribution of {feature}")
     
-    # Scatter plot
-    if norm_attendance:
-        att_name = 'att_div_capacity'
-        att_label = 'attendance / capacity'
-    else:
-        att_name = 'attendance'
-        att_label = 'attendance'
+    # Scatter plot of attendance
+    ax1 = fig.add_subplot(spec[1,0])
     df.plot.scatter(x=feature,
-                    y=att_name,
-                    ax=ax[1],
+                    y='attendance',
+                    ax=ax1,
                     xlabel=feature,
-                    ylabel=att_label,
-                    title=f"{att_label} vs. {feature}",
-                    alpha=0.5)
+                    ylabel='attendance',
+                    title=f"attendance vs. {feature}",
+                    alpha=0.5,
+                    s=7)
     
-    df.groupby(feature).agg({feature:'last',att_name:'mean'}).plot.scatter(x=feature,
-                                                                           y=att_name,
-                                                                           ax=ax[1],
-                                                                           color='darkred',
-                                                                           alpha=1,
-                                                                           s=250,
-                                                                           marker="_")
+    # Plot average values
+    df.groupby(feature).agg({feature:'last','attendance':'mean'}).plot.scatter(x=feature,
+                                                                               y='attendance',
+                                                                               ax=ax1,
+                                                                               color='darkred',
+                                                                               alpha=1,
+                                                                               s=20)
+
+    # Scatter plot of attendance/capacity
+    ax2 = fig.add_subplot(spec[1,1])
+    df.plot.scatter(x=feature,
+                    y='att_div_capacity',
+                    ax=ax2,
+                    xlabel=feature,
+                    ylabel='attendance/capacity',
+                    title=f"attendance/capacity vs. {feature}",
+                    alpha=0.5,
+                    s=7)
+    
+    # Plot average values
+    df.groupby(feature).agg({feature:'last','att_div_capacity':'mean'}).plot.scatter(x=feature,
+                                                                                     y='att_div_capacity',
+                                                                                     ax=ax2,
+                                                                                     color='darkred',
+                                                                                     alpha=1,
+                                                                                     s=20)
+    
+    fig.tight_layout()
+    
+def make_bar_box(df, feature, figsize=(7,7)):
+    """
+    This function makes three plots:
+    Top: Bar chart of the specified feature.
+    Left: Boxplot of attendance vs. the specified feature.
+    Right: Boxplot of attendance/capacity vs. the specified feature.
+    
+    This function should be used for discrete numerical features and categorical features.
+    For continuous numerical features, use make_hist_scatter (above).
+    
+    Inputs:
+    df: Pandas DataFrame that contains the data.
+    feature: The name of the column we want to look at.
+    """
+    fig = plt.figure(figsize=figsize)
+    spec = fig.add_gridspec(2,2)
+    
+    # Bar chart
+    ax0 = fig.add_subplot(spec[0,:])
+    df.groupby(by=feature).agg({feature:'count'}).plot.bar(ax=ax0,
+                                                           title=f"Distribution of {feature}")
+    
+    # Boxplot of attendance
+    ax1 = fig.add_subplot(spec[1,0])
+    df.plot.box(by=feature,
+                column='attendance',
+                ax=ax1,
+                grid=False,
+                ylabel='attendance',
+                xlabel=feature,
+                title=f"attendance vs. {feature}")
+    
+    # Boxplot of attendance
+    ax2 = fig.add_subplot(spec[1,1])
+    df.plot.box(by=feature,
+                column='att_div_capacity',
+                ax=ax2,
+                grid=False,
+                ylabel='attendance/capacity',
+                xlabel=feature,
+                title=f"attendance/capacity vs. {feature}")
     
     fig.tight_layout()
     
