@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from xgboost import XGBRegressor
 
-def create_X(df, columns, add_constant=False):
+def create_X(df, columns, add_constant=False, drop_first=True):
     """
     Create a DataFrame to use as input to a model.
     
@@ -34,6 +34,7 @@ def create_X(df, columns, add_constant=False):
     
     Options:
     add_constant: If True, a constant column will be added. Default is False.
+    drop_first: Whether to drop the first column when using get_dummies. Default is True.
     """
     # Check to make sure all entries in columns are valid
     for word in columns:
@@ -50,19 +51,19 @@ def create_X(df, columns, add_constant=False):
     
     # Create categorical variables for home team and away team
     if 'home_team' in columns:
-        X = pd.get_dummies(X, columns=['home_team'], drop_first=True, dtype=int)
+        X = pd.get_dummies(X, columns=['home_team'], drop_first=drop_first, dtype=int)
     if 'away_team' in columns:
-        X = pd.get_dummies(X, columns=['away_team'], drop_first=True, dtype=int)
+        X = pd.get_dummies(X, columns=['away_team'], drop_first=drop_first, dtype=int)
         
     # Create categories for day of the week
     if 'day' in columns:
-        X = pd.get_dummies(X, columns=['day'], drop_first=False, dtype=int)
+        X = pd.get_dummies(X, columns=['day'], drop_first=drop_first, dtype=int)
         # Drop Saturday
         X.drop(columns='day_Sat', inplace=True)
     
     # Create categories for year
     if 'date_year' in columns:
-        X = pd.get_dummies(X, columns=['date_year'], drop_first=True, dtype=int)
+        X = pd.get_dummies(X, columns=['date_year'], drop_first=drop_first, dtype=int)
         
     # Create column that indicates if it rained before or during the match
     if 'rain' in columns:
@@ -89,7 +90,7 @@ def create_X(df, columns, add_constant=False):
         X['local_time'].apply(lambda x: 1 if x >= 14 else 0)
         
         X.drop(columns='local_time', inplace=True)
-        X = pd.get_dummies(X, columns=['time_categ'], drop_first=True, dtype=int)
+        X = pd.get_dummies(X, columns=['time_categ'], drop_first=drop_first, dtype=int)
         
     # Subtract 7 from the month so that the reference month is July (middle of season)
     if 'date_month' in columns:
