@@ -63,7 +63,7 @@ def df_from_fbref(year='current'):
             sheet_name = '2023'
         else:
             sheet_name = str(year)       
-        stad_df = pd.read_excel('mls_stadiums.xlsx', sheet_name=sheet_name)
+        stad_df = pd.read_excel('supplementary_data/mls_stadiums.xlsx', sheet_name=sheet_name)
         
         # Change teams to integer IDs
         df['home_team'] = df['home_team'].apply(lambda x: stad_df[stad_df['Team']==x]['Team_ID'].iloc[0])
@@ -79,7 +79,7 @@ def df_from_fbref(year='current'):
         df['playoff'] = df['round'].apply(lambda x: 0 if x=='Regular Season' else 1)
         
         # Add missing attendance data from excel file
-        missing_att = pd.read_excel('missing_attendance.xlsx', sheet_name='fill')
+        missing_att = pd.read_excel('supplementary_data/missing_attendance.xlsx', sheet_name='fill')
         
         # Get indices of matches with attendance = 0
         df_zero_ind = df[df['attendance']==0].index
@@ -102,8 +102,15 @@ def df_from_fbref(year='current'):
         df['real_home_team'] = df.apply(lambda x: 1 if (stad_df[stad_df['Stadium']==x.stadium]['Team_ID'].iloc[0]==x.home_team)|\
                                         (stad_df[stad_df['Stadium']==x.stadium]['Team_ID'].iloc[0]==x.away_team) else 0, axis=1)
         
+        # Create column that indicates whether a match is a home opener for the season
+        df['home_opener'] = 0
+        
+        # Find the home opener for each team
+        for ht in df['home_team'].unique():
+            df.loc[df[df['home_team']==ht].index[0],'home_opener'] = 1
+        
         # Read in information about conferences and rivalries
-        conf_riv_df = pd.read_excel('mls_rivals.xlsx', sheet_name=sheet_name)
+        conf_riv_df = pd.read_excel('supplementary_data/mls_rivals.xlsx', sheet_name=sheet_name)
         
         # Get conference of each home team and away team
         home_conf = [conf_riv_df[conf_riv_df['Team_ID']==x]['Conference'].iloc[0] for x in df['home_team']]
