@@ -1,6 +1,6 @@
 # Analyzing Attendance in Major League Soccer
 
-<img src="images/mls_logo.png"  width="50%" height="50%">
+<img src="images/mls_logo.png"  width="25%" height="25%">
 
 ## Contents of Repository
 |File/Folder                  | Description                                                    |
@@ -87,7 +87,7 @@ The plot above shows the actual attendance vs. the predicted attendance for the 
 
 **When should matches be held?**
 
-<img src="images/time_importance.png"  width="50%" height="50%">
+<img src="images/time_importance.png"  width="100%" height="100%">
 
 **Does weather matter?**
 
@@ -95,7 +95,7 @@ The plot above shows the actual attendance vs. the predicted attendance for the 
 
 **Home team and away team**
 
-<img src="images/team_importance.png"  width="50%" height="50%">
+<img src="images/team_importance.png"  width="100%" height="100%">
 
 **Other important factors**
 
