@@ -85,21 +85,49 @@ The plot above shows the actual attendance vs. the predicted attendance for the 
 
 ## Results
 
-**When should matches be held?**
+The goal of this project is to understand what factors affect attendance and how large the effect is. I estimated the effect of each feature by inputting fake data to the model, changing one feature at a time to see how the predicted attendance changed. The fake data includes each team playing at home and away against each other team. The fake data also assumes that all matches are played on a Saturday at 7:30 pm in July, 2023, with good weather conditions by default.
+
+### When should matches be held?
 
 <img src="images/time_importance.png"  width="100%" height="100%">
 
-**Does weather matter?**
+First, let's use this as an example of how the estimation works. All of the matches are set to Saturday by default. If I want to see how the attendance changes if the matches are played on Wednesday instead, I just change all of the matches to Wednesday and get a new prediction. The bar in the top-left graph for Wednesday is how much the average attendance changed by switching from Saturday to Wednesday.
+
+**Day of the week**: According to the model, the best day to hold matches is on Saturday since the average attendance decreases by switching to any other day. The worst days were Wednesday, Thursday, and Tuesday. A match on a Wednesday is expected to get about 2,800 fewer fans than a Saturday match, a significant decrease.
+
+**Month**: The attendance improved as the season progressed. The best attendance happened in November and December which got much higher attendance than other months. I think the primary reason these months had higher attendance is because the playoffs happen in November and December. I also think that is why attendance improved from February to October; the playoff picture becomes clearer as the season progresses, making the stakes of each regular season game higher.
+
+**Year**: The attendance in 2021 was about 4,000 lower than in 2018. This was certainly a result of the COVID-19 pandemic (note: matches that did not allow any fans were removed from the dataset, but matches that had reduced capacity for safety reasons are still included).
+
+**Time of Day**: While the model considers matches starting between 5:00-7:59 pm to be the best, the attendance was not heavily affected by changing the kick-off time. I would still consider early kick-offs to be a bad choice for weekdays.
+
+### Does weather matter?
 
 <img src="images/weather_importance.png"  width="50%" height="50%">
 
-**Home team and away team**
+**Temperature**: Matches with a temperature below 40 degrees Fahrenheit are predicted to have about 1,000 fewer people on average. This reinforces the choice MLS made to avoid playing matches in winter.
+
+**Precipitation**: There is no strong evidence that rain or snow had a strong effect on attendance. However, this could be partly due to low sample size.
+
+### Home team and away team
 
 <img src="images/team_importance.png"  width="100%" height="100%">
 
-**Other important factors**
+**Home team**: The three teams with the highest attendance (Atlanta, Seattle, and Charlotte) all share stadiums with an NFL team. While this is not an option for every team, this does seem to provide evidence that this is a strong option for teams that can do this. However, it is not a guarantee of success. The New England Revolution and Chicago Fire also currently share large stadiums with NFL teams, but the former has average attendance and the latter has the third worst attendance in the league.
+
+**Away team**: The three teams that tend to get the highest attendance when they play on the road are the Los Angeles Galaxy, Inter Miami, and Los Angeles FC. I think a major reason for these teams driving attendance is their star power. With players like Lionel Messi, Javier Hernandez, and Carlos Vela, these teams have some of the most recognizable stars in the league. A more detailed analysis would be required to confirm whether star players are important for attendance, but this is at least point in that direction.
+
+### Other factors
 
 <img src="images/feature_importance.png"  width="50%" height="50%">
+
+**Not real home team**: On a few occasions, a team is forced to play a "home" match away from their home stadium. The effect on attendance is huge. The average attendance is about 8,000 lower when this happens.
+
+**Rivalries**: Matches played between rivals are predicted to get 2,000 more fans.
+
+**Home openers**: While the model indicates that February and March have the worst attendance, the exception seems to be home openers (a team's first home match of the season). The model predicts that home openers get about 2,000 more fans on average.
+
+**Playoffs**: Earlier, I argued that playoffs help drive attendance, and yet the model predicts a very small increase in attendance for playoff matches. The reason for this is because the increase in attendance is already reflected by what month a match is played. All matches in November and December are playoff games (with a few also happening in late October).
 
 ## Recommendations
 **Weekends better than midweek**: The model indicated that matches played on Wednesdays get about 2,700 fewer fans than Saturday matches and Tuesdays/Thursdays get almost 1,000 fewer fans. Attendance would improve if MLS could play more of their matches on weekends rather than midweek.
