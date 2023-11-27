@@ -138,11 +138,14 @@ First, let's use this as an example of how the estimation works. All of the matc
 |model_funcs.py                   | File containing functions for making, evaluating models.       |
 |exploration_visuals.py           | File containing functions for exploring data.                  |
 |gather_data.py                   | File containing functions for collecting data.                 |
+|                                                                                                  |
 |**supplementary_data**                                                                            |
 |mls_stadiums.xlsx                | Excel file containing information about MLS stadiums.          |
 |mls_rivals.xlsx                  | Excel file containing information about MLS rivals.            |
 |missing_attendance.xlsx          | Excel file containing corrections to attendance/stadium data.  |
+|                                                                                                  |
 |**images**                       | Folder containing images used in the presentation and README.  |
+|                                                                                                  |
 |modeling.pdf                     | PDF of modeling notebook.                                      |
 |mls_attendance.pdf               | PDF of the non-technical presentation for stakeholders.        |
 |environment.yml                  | Python environment used for the project.                       |
