@@ -8,6 +8,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import mean_squared_error as mse
+from sklearn.metrics import r2_score
 from xgboost import XGBRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
@@ -119,10 +121,6 @@ def evaluate_linear_model(model, X, y):
     """
     # RMSE of residuals
     print(f"RMSE of residuals: {np.sqrt(model.mse_resid)}")
-
-    # Central 68.3% interval
-    print(f"68.3% interval: {np.quantile(model.resid, 0.1585)} {np.quantile(model.resid, 0.8415)}")
-    print(f"Width of 68.3% interval: {np.quantile(model.resid, 0.8415)-np.quantile(model.resid, 0.1585)}")
     
     # R-squared value
     print(f"R-squared: {model.rsquared}")
@@ -134,6 +132,7 @@ def evaluate_linear_model(model, X, y):
                alpha=0.5,
                s=7)
 
+    # Plot x=y line
     ax.plot([0,80000],[0,80000],color='black')
 
     ax.set_xlabel('Predicted attendance')
@@ -152,18 +151,14 @@ def evaluate_model_split(model, X_train, y_train, X_test, y_test):
     y_test_pred = model.predict(X_test)
     
     print("RMSE:")
-    print(f"Train: {np.round(np.std(y_train-y_train_pred),1)}")
-    print(f"Test: {np.round(np.std(y_test-y_test_pred),1)}")
+    print(f"Train: {np.round(mse(y_train, y_train_pred, squared=False),1)}")
+    print(f"Test: {np.round(mse(y_test, y_test_pred, squared=False),1)}")
     print()
     print("R-squared:")
-    print(f"Train: {np.round(1.0 - np.var(y_train-y_train_pred)/np.var(y_train),3)}")
-    print(f"Test: {np.round(1.0 - np.var(y_test-y_test_pred)/np.var(y_test),3)}")
-    print()
-    print("Width of 68.3% interval")
-    print(f"Train: {np.round(np.quantile(y_train-y_train_pred,0.8415)-np.quantile(y_train-y_train_pred,0.1585),1)}")
-    print(f"Test: {np.round(np.quantile(y_test-y_test_pred,0.8415)-np.quantile(y_test-y_test_pred,0.1585),1)}")
+    print(f"Train: {np.round(r2_score(y_train, y_train_pred),3)}")
+    print(f"Test: {np.round(r2_score(y_test, y_test_pred),3)}")
     
-    fig, ax = plt.subplots(ncols=2, figsize=(12,6))
+    fig, ax = plt.subplots(ncols=2, figsize=(10,5))
     
     # Train
     ax[0].scatter(y_train_pred,
@@ -173,7 +168,7 @@ def evaluate_model_split(model, X_train, y_train, X_test, y_test):
     # Plot x=y line
     ax[0].plot([0,80000],[0,80000], color='black')
     ax[0].set_xlabel('Predicted Attendance')
-    ax[0].set_xlabel('Actual Attendance')
+    ax[0].set_ylabel('Actual Attendance')
     ax[0].set_title('Train')
     
     # Test
@@ -184,75 +179,10 @@ def evaluate_model_split(model, X_train, y_train, X_test, y_test):
     # Plot x=y line
     ax[1].plot([0,80000],[0,80000], color='black')
     ax[1].set_xlabel('Predicted Attendance')
-    ax[1].set_xlabel('Actual Attendance')
+    ax[1].set_ylabel('Actual Attendance')
     ax[1].set_title('Test')
     
     fig.tight_layout()
-
-def xgb_gridsearch(param_grid, X_train, y_train, X_test, y_test):
-    """
-    This function finds the best combination of hyperparameters for the XGBRegressor
-    by training with one dataset, then evaluating using another.
-    
-    The function evaluates the fit using the R-squared metric, which is the default
-    for the XGBRegressor.
-    
-    Inputs:
-    param_grid: Grid of hyperparameters for the XGBRegressor.
-    X_train, y_train: Training data
-    X_test, y_test: Test data
-    
-    Outputs:
-    xgb_best: Model that achieves the best performance on the test data.
-    best_params: Dictionary of the best hyperparameters.
-    param_indices: Numpy array of indices for each combination of hyperparameters.
-    all_scores: Numpy array of all the train and test scores (R-squared values).
-    """
-    # Length for each hyperparameter list
-    grid_lens = [len(param_grid[key]) for key in param_grid.keys()]
-    grid_prods = np.cumprod([1]+grid_lens)
-    
-    # Initialize the best R-squared to be as bad as possible
-    best_score = -1.0
-    
-    # Best parameters
-    best_params = []
-    
-    # List of all the scores
-    all_scores = []
-    
-    # Parameter indices per model
-    param_indices = []
-    
-    for number in range(grid_prods[-1]):
-        # Get the indices for the next combination of parameters
-        indices = [(number//grid_prods[x])%grid_lens[x] for x in range(len(grid_lens))]
-        
-        param_indices.append(indices)
-        
-        # Make parameter dictionary
-        param_dict = {key: param_grid[key][indices[i]] for i,key in enumerate(param_grid.keys())}
-        
-        # Make new instance of XGBRegressor
-        xgb = XGBRegressor(**param_dict)
-        
-        # Fit to train data
-        xgb.fit(X_train, y_train)
-        
-        # Get test score
-        train_score = xgb.score(X_train, y_train)
-        test_score = xgb.score(X_test, y_test)
-        all_scores.append([train_score, test_score])
-        
-        # Save if the best model so far
-        if test_score > best_score:
-            best_score = test_score
-            xgb_best = xgb
-            best_params = param_dict
-            
-    
-            
-    return xgb_best, best_params, np.array(param_indices), np.array(all_scores)
 
 def model_gridsearch(model_type, param_grid, X_train, y_train, X_test, y_test):
     """
