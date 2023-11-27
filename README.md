@@ -8,13 +8,12 @@
 |[modeling.ipynb](https://github.com/daviderics/mls_attendance/blob/main/modeling.ipynb) | Jupyter notebook for creating models.                 |
 |[data_exploration.ipynb](https://github.com/daviderics/mls_attendance/blob/main/data_exploration.ipynb) | Jupyter notebook for exploring the data.                 |
 |[collect_match_weather_data.ipynb](https://github.com/daviderics/mls_attendance/blob/main/collect_match_weather_data.ipynb) | Jupyter notebook for collecting data.                 |
-|modeling.pdf                   | PDF of modeling.ipynb.                                         |
-|data_exploration.pdf           | PDF of data_exploration.ipynb.                                 |
-|collect_match_weather_data.pdf | PDF of collect_match_weather_data.ipynb.                       |
+|combined_notebooks.pdf         | PDF of all notebooks combined.                                 |
 |model_funcs.py                 | File containing functions for making, evaluating models.       |
 |exploration_visuals.py         | File containing functions for exploring data.                  |
 |gather_data.py                 | File containing functions for collecting data.                 |
 |mls_attendance.pdf             | PDF of the non-technical presentation for stakeholders.        |
+|environment.yml                | Python environment used for the project.                       |
 |supplementary_data             | Folder containing supplementary data.                          |
 |images                         | Folder containing images used in the presentation and README.  |
 
