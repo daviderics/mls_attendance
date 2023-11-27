@@ -129,22 +129,22 @@ First, let's use this as an example of how the estimation works. All of the matc
 |The model indicates that rivalry matches get about 2,000 more people on average. I think MLS would benefit from promoting these rivalries, but I would caution that they should not try to manufacture rivalries. Instead, they should make sure announcers and articles on their website highlight the history between teams. A good recent example of this is FC Cincinnati and the New York Red Bulls. They are not close enough geographically to be automatic rivals, but a rivalry was kindled when a player switched from Cincinnati to New York, leaving with some not so kind words for his former club. These are the kinds of things that can spark animosity between fanbases.|
 
 ## Contents of Repository
-|File/Folder                        | Description                                                    |
-|:----------------------------------|:---------------------------------------------------------------|
-|modeling.pdf                       | PDF of modeling notebook.                                      |
-|mls_attendance.pdf                 | PDF of the non-technical presentation for stakeholders.        |
-|environment.yml                    | Python environment used for the project.                       |
-|notebooks                          | Folder of notebooks and supporting functions                   |
-|--modeling.ipynb                   | Jupyter notebook for creating models.                          |
-|--data_exploration.ipynb           | Jupyter notebook for exploring the data.                       |
-|--model_funcs.py                   | File containing functions for making, evaluating models.       |
-|--exploration_visuals.py           | File containing functions for exploring data.                  |
-|--collect_match_weather_data.ipynb | File containing functions for collecting data.                 |
-|--gather_data.py                   | File containing functions for collecting data.                 |
-|supplementary_data                 | Folder containing supplementary data.                          |
-|--mls_stadiums.xlsx                | Excel file containing information about MLS stadiums.          |
-|--mls_rivals.xlsx                  | Excel file containing information about MLS rivals.            |
-|--missing_attendance.xlsx          | Excel file containing corrections to attendance/stadium data.  |
-|images                             | Folder containing images used in the presentation and README.  |
+|File/Folder                      | Description                                                    |
+|:--------------------------------|:---------------------------------------------------------------|
+|**notebooks**                                                                                     |
+|modeling.ipynb                   | Jupyter notebook for creating models.                          |
+|data_exploration.ipynb           | Jupyter notebook for exploring the data.                       |
+|collect_match_weather_data.ipynb | Jupyter notebook for collecting match and weather data.        |
+|model_funcs.py                   | File containing functions for making, evaluating models.       |
+|exploration_visuals.py           | File containing functions for exploring data.                  |
+|gather_data.py                   | File containing functions for collecting data.                 |
+|**supplementary_data**                                                                            |
+|mls_stadiums.xlsx                | Excel file containing information about MLS stadiums.          |
+|mls_rivals.xlsx                  | Excel file containing information about MLS rivals.            |
+|missing_attendance.xlsx          | Excel file containing corrections to attendance/stadium data.  |
+|**images**                       | Folder containing images used in the presentation and README.  |
+|modeling.pdf                     | PDF of modeling notebook.                                      |
+|mls_attendance.pdf               | PDF of the non-technical presentation for stakeholders.        |
+|environment.yml                  | Python environment used for the project.                       |
 
 Contact: email: david.eric24@gmail.com       linkedIn: https://www.linkedin.com/in/david-schenck-data/
